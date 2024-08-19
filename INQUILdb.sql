@@ -1,5 +1,6 @@
 USE master;
--- SCRIPT REALIZADO PARA LA VERSION MSSQL
+-- SCRIPT REALIZADO PARA LA VERSION MSSQL Local 
+
 IF EXISTS ( SELECT name FROM sysdatabases WHERE name ='TenantDB')
 	DROP DATABASE TenantDB;
 GO
@@ -22,7 +23,7 @@ CREATE TABLE Tb_Usuario(
 	int_registroUser INTEGER NULL,
 	date_modifica DATETIME NULL,
 	int_modificaUser INTEGER NULL,
-	bit_estado BIT NOT NULL DEFAULT 1,
+	bit_estado BIT NOT NULL DEFAULT 1
 );
 GO
 -- Tipo Usuario 
@@ -43,7 +44,7 @@ CREATE TABLE Tb_Documento(
 	int_long INTEGER NOT NULL DEFAULT 0,
 	int_tipo INTEGER NOT NULL DEFAULT 0,
 	int_tipoContrib INTEGER NULL DEFAULT 0,
-	int_longExact INTEGER NULL DEFAULT 0,
+	int_longExact INTEGER NULL DEFAULT 0
 );
 GO
 
@@ -84,14 +85,15 @@ CREATE TABLE Tb_Inquilino(
 	str_prefijoPais VARCHAR(10) NULL,
 	str_direccion VARCHAR(200) NULL,
 	int_tipo INTEGER NOT NULL DEFAULT 0,
-	img_foto IMAGE NULL,
-	img_docmt IMAGE NULL,
+	
+	str_url_foto VARCHAR(2000) NULL,
+	str_url_docmt VARCHAR(2000) NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
 	date_modifica DATETIME NULL,
 	int_modificaUser INTEGER NULL,
-	bit_estado BIT NOT NULL DEFAULT 1, 
+	bit_estado BIT NOT NULL DEFAULT 1
 );
 GO
 
@@ -105,30 +107,47 @@ CREATE TABLE Tb_Propietario(
 	str_prefijoPais VARCHAR(10) NULL,
 	str_direccion VARCHAR(200) NULL,
 	str_direccionExt VARCHAR(200) NULL,
-	img_foto IMAGE NULL,
-	img_docmt IMAGE NULL,
+	
+	str_url_foto VARCHAR(2000) NULL,
+	str_url_docmt VARCHAR(2000) NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
 	date_modifica DATETIME NULL,
 	int_modificaUser INTEGER NULL,
-	bit_estado BIT NOT NULL DEFAULT 1,
+	bit_estado BIT NOT NULL DEFAULT 1
 );
 GO
 
 CREATE TABLE  Tb_Inmueble(
 	int_codInmub INTEGER IDENTITY (40001,1) PRIMARY KEY,
 	int_codProp INTEGER NOT NULL FOREIGN KEY REFERENCES Tb_Propietario(int_codProp),
+	str_tipoInmueble VARCHAR(5) NULL,
 	str_nombre VARCHAR(60) NOT NULL,
 	str_descrip VARCHAR(200) NULL,
 	str_direccion VARCHAR(200) NULL,
-	str_departamento VARCHAR(100) NULL,
-	str_provincia VARCHAR(100) NULL,
-	str_distrito VARCHAR(100) NULL,
+	str_codDepart VARCHAR(6) NULL,
+	str_codProvin VARCHAR(6) NULL,
+	str_codDistri VARCHAR(6) NULL,
 	str_cords VARCHAR(100) NULL,
 	dou_area FLOAT DEFAULT 0 NOT NULL, 
 	str_unid VARCHAR(5) NULL,
 	int_espacios INTEGER NOT NULL DEFAULT 1,
 	
+	date_registro DATETIME NULL,
+	int_registroUser INTEGER NULL,
+	date_modifica DATETIME NULL,
+	int_modificaUser INTEGER NULL,
+	bit_estado BIT NOT NULL DEFAULT 1
+);
+GO
+
+CREATE TABLE Tb_Inmueble_Foto(
+	int_codInFoto INTEGER IDENTITY(1,1) PRIMARY KEY,
+	int_codInmub INTEGER NOT NULL FOREIGN KEY REFERENCES Tb_Inmueble(int_codInmub),
+	str_url VARCHAR(2000) NOT NULL,
+
+	date_registro DATETIME NULL,
+	int_registroUser INTEGER NULL
 );
 GO

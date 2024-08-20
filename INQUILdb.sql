@@ -76,7 +76,7 @@ VALUES
 
 
 CREATE TABLE Tb_Inquilino(
-	int_codInq INTEGER IDENTITY(20001,1) PRIMARY KEY,
+	int_codInq INTEGER IDENTITY(10001,1) PRIMARY KEY,
 	str_apellidos VARCHAR(60) NOT NULL,
 	str_nombres VARCHAR(60) NOT NULL,
 	int_tipoDocmt INTEGER NOT NULL DEFAULT 1 FOREIGN KEY REFERENCES Tb_Documento(int_codDoc),
@@ -98,7 +98,7 @@ CREATE TABLE Tb_Inquilino(
 GO
 
 CREATE TABLE Tb_Propietario(
-	int_codProp INTEGER IDENTITY(30001,1) PRIMARY KEY,
+	int_codProp INTEGER IDENTITY(10001,1) PRIMARY KEY,
 	str_apellidos VARCHAR(60) NOT NULL,
 	str_nombres VARCHAR(60) NOT NULL,
 	int_tipoDocmt INTEGER NOT NULL DEFAULT 1 FOREIGN KEY REFERENCES Tb_Documento(int_codDoc),
@@ -118,9 +118,29 @@ CREATE TABLE Tb_Propietario(
 	bit_estado BIT NOT NULL DEFAULT 1
 );
 GO
+CREATE TABLE Tb_Departamento(
+	str_codDepart VARCHAR(6) PRIMARY KEY,
+	str_nombre VARCHAR(50) NOT NULL
+);
+GO
+
+CREATE TABLE Tb_Provincia(
+	str_codProvin VARCHAR(6) PRIMARY KEY,
+	str_codDepart VARCHAR(6) FOREIGN KEY REFERENCES Tb_Departamento(str_codDepart),
+	str_nombre VARCHAR(50) NOT NULL
+);
+GO
+
+CREATE TABLE Tb_Distrito(
+	str_codDistri VARCHAR(6) PRIMARY KEY,
+	str_codProvin VARCHAR(6) FOREIGN KEY REFERENCES Tb_Provincia(str_codProvin),
+	str_codDepart VARCHAR(6) FOREIGN KEY REFERENCES Tb_Departamento(str_codDepart),
+	str_nombre VARCHAR(50) NOT NULL
+);
+GO
 
 CREATE TABLE  Tb_Inmueble(
-	int_codInmub INTEGER IDENTITY (40001,1) PRIMARY KEY,
+	int_codInmub INTEGER IDENTITY (10001,1) PRIMARY KEY,
 	int_codProp INTEGER NOT NULL FOREIGN KEY REFERENCES Tb_Propietario(int_codProp),
 	str_tipoInmueble VARCHAR(5) NULL,
 	str_nombre VARCHAR(60) NOT NULL,
@@ -131,7 +151,7 @@ CREATE TABLE  Tb_Inmueble(
 	str_codDistri VARCHAR(6) NULL,
 	str_cords VARCHAR(100) NULL,
 	dou_area FLOAT DEFAULT 0 NOT NULL, 
-	str_unid VARCHAR(5) NULL,
+	str_unid VARCHAR(5) DEFAULT 'm2' NOT NULL,
 	int_espacios INTEGER NOT NULL DEFAULT 1,
 	
 	date_registro DATETIME NULL,
@@ -151,3 +171,31 @@ CREATE TABLE Tb_Inmueble_Foto(
 	int_registroUser INTEGER NULL
 );
 GO
+
+CREATE TABLE Tb_Espacio(
+	int_codEspac INTEGER IDENTITY(10001,1) PRIMARY KEY,
+	int_codInmub INTEGER NOT NULL FOREIGN KEY REFERENCES Tb_Inmueble(int_codInmub),	
+	str_nombre VARCHAR(60) NULL,
+	str_descrip VARCHAR(200) NULL,
+	dou_area FLOAT DEFAULT 0 NOT NULL,
+	str_unid VARCHAR(5) DEFAULT 'm2' NOT NULL,
+	int_estadoOperativo INTEGER DEFAULT 0 NOT NULL,
+
+	date_registro DATETIME NULL,
+	int_registroUser INTEGER NULL,
+	date_modifica DATETIME NULL,
+	int_modificaUser INTEGER NULL,
+	bit_estado BIT NOT NULL DEFAULT 1
+);
+GO
+-- ESTADO OPERATIVO
+-- 0 : Sin contrato
+-- 1 : Con contrato
+-- +2 : Otros tipos de estados
+
+CREATE TABLE Tb_Contrato(
+	int_codContr INTEGER IDENTITY(10001,1) PRIMARY KEY,
+	int_codEspac INTEGER FOREIGN KEY REFERENCES Tb_Espacio(int_codEspac),
+	int_codInq INTEGER FOREIGN KEY REFERENCES Tb_Inquilino(int_codInq),
+	
+);

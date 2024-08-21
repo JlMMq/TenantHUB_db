@@ -1,0 +1,8 @@
+USE master;
+-- SCRIPT REALIZADO PARA LA VERSION MSSQL Local (2/3)
+USE TenantDB;
+GO
+
+
+
+

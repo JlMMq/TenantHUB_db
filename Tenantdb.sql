@@ -1,5 +1,5 @@
 USE master;
--- SCRIPT REALIZADO PARA LA VERSION MSSQL Local 
+-- SCRIPT REALIZADO PARA LA VERSION MSSQL Local (1/3)
 
 IF EXISTS ( SELECT name FROM sysdatabases WHERE name ='TenantDB')
 	DROP DATABASE TenantDB;
@@ -15,7 +15,7 @@ CREATE TABLE Tb_Usuario(
 	int_codUser INTEGER IDENTITY(10001,1) PRIMARY KEY,
 	int_codExte INTEGER DEFAULT 0 NOT NULL, 
 	int_tipoUser INTEGER DEFAULT 0 NOT NULL,
-	str_correo VARCHAR(200) NULL,
+	str_correo VARCHAR(200) UNIQUE NULL,
 	str_nombre VARCHAR(40) NOT NULL,
 	str_pass VARCHAR(250) NOT NULL,
 
@@ -32,7 +32,7 @@ GO
 -- 2 : PROPTR
 -- 3 : COMUN
 
-INSERT INTO Tb_Usuario(int_tipoUser,str_correo,str_nombre,str_pass,date_registro,int_registroUser,bit_estado)
+INSERT INTO Tb_Usuario(int_codExte,int_tipoUser,str_correo,str_nombre,str_pass,date_registro,int_registroUser,bit_estado)
 VALUES
 (0,0,'sys@s.com','sys','sunsetchild',GETDATE(),10001,1);
 
@@ -119,23 +119,23 @@ CREATE TABLE Tb_Propietario(
 );
 GO
 CREATE TABLE Tb_Departamento(
-	str_codDepart VARCHAR(6) PRIMARY KEY,
+	str_codDepart VARCHAR(2) PRIMARY KEY,
 	str_nombre VARCHAR(50) NOT NULL
 );
 GO
 
 CREATE TABLE Tb_Provincia(
-	str_codProvin VARCHAR(6) PRIMARY KEY,
+	str_codProvin VARCHAR(4) PRIMARY KEY,
 	str_nombre VARCHAR(50) NOT NULL,
-	str_codDepart VARCHAR(6) FOREIGN KEY REFERENCES Tb_Departamento(str_codDepart)
+	str_codDepart VARCHAR(2) FOREIGN KEY REFERENCES Tb_Departamento(str_codDepart)
 );
 GO
 
 CREATE TABLE Tb_Distrito(
 	str_codDistri VARCHAR(6) PRIMARY KEY,
 	str_nombre VARCHAR(50) NOT NULL,
-	str_codProvin VARCHAR(6) FOREIGN KEY REFERENCES Tb_Provincia(str_codProvin),
-	str_codDepart VARCHAR(6) FOREIGN KEY REFERENCES Tb_Departamento(str_codDepart)
+	str_codProvin VARCHAR(4) FOREIGN KEY REFERENCES Tb_Provincia(str_codProvin),
+	str_codDepart VARCHAR(2) FOREIGN KEY REFERENCES Tb_Departamento(str_codDepart)
 );
 GO
 
@@ -146,9 +146,7 @@ CREATE TABLE  Tb_Inmueble(
 	str_nombre VARCHAR(60) NOT NULL,
 	str_descrip VARCHAR(200) NULL,
 	str_direccion VARCHAR(200) NULL,
-	str_codDepart VARCHAR(6) NULL,
-	str_codProvin VARCHAR(6) NULL,
-	str_codDistri VARCHAR(6) NULL,
+	str_ubigeo VARCHAR(6) NOT NULL FOREIGN KEY REFERENCES Tb_Distrito(str_codDistri),
 	str_cords VARCHAR(100) NULL,
 	dou_area FLOAT DEFAULT 0 NOT NULL, 
 	str_unid VARCHAR(5) DEFAULT 'm2' NOT NULL,
@@ -218,6 +216,32 @@ GO
 -- 0 : Sin definir
 -- 1 : Domestico
 -- 2 : Comercial
+
+CREATE TABLE Tb_Pago (
+    int_codContr INTEGER NOT NULL,
+    int_codPago INTEGER NOT NULL,
+	dec_monto DECIMAL NOT NULL DEFAULT 0,
+	date_pago DATE NOT NULL,
+	int_situacion INTEGER NOT NULL DEFAULT 0,
+	int_diasAtrasados INTEGER NULL,
+
+	date_registro DATETIME NULL,
+	int_registroUser INTEGER NULL,
+	date_modifica DATETIME NULL,
+	int_modificaUser INTEGER NULL,
+	bit_estado BIT NOT NULL DEFAULT 1
+
+    CONSTRAINT PK_Tb_Pago PRIMARY KEY (int_codContr, int_codPago),
+    CONSTRAINT FK_Tb_Pago_Contrato FOREIGN KEY (int_codContr) REFERENCES Tb_Contrato(int_codContr)
+);
+GO
+-- ESTADO PAGO (int_situacion)
+-- 0 : Sin definir 
+-- 1 : Pendiente
+-- 2 : Atrasado
+-- 3 : Muy atrasado
+-- 4 : Pagado
+
 
 --INSERSIONES 
 INSERT INTO Tb_Departamento(str_codDepart,str_nombre)
@@ -893,7 +917,9 @@ VALUES
 ('040808', 'Sayla', '0408', '04'),
 ('040809', 'Tauria', '0408', '04'),
 ('040810', 'Tomepampa', '0408', '04'),
-('040811', 'Toro', '0408', '04'),
+('040811', 'Toro', '0408', '04');
+INSERT INTO Tb_Distrito(str_codDistri,str_nombre,str_codProvin,str_codDepart)
+VALUES
 ('050101', 'Ayacucho', '0501', '05'),
 ('050102', 'Acocro', '0501', '05'),
 ('050103', 'Acos Vinchos', '0501', '05'),

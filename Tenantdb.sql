@@ -95,6 +95,11 @@ CREATE TABLE Tb_Inquilino(
 	int_modificaUser INTEGER NULL,
 	bit_estado BIT NOT NULL DEFAULT 1
 );
+-- TIPOS INQULINO(int_tipo)
+-- 0 : Domestico
+-- 1 : Comercial
+
+
 GO
 
 CREATE TABLE Tb_Propietario(
@@ -150,8 +155,9 @@ CREATE TABLE  Tb_Inmueble(
 	str_cords VARCHAR(100) NULL,
 	dou_area FLOAT DEFAULT 0 NOT NULL, 
 	str_unid VARCHAR(5) DEFAULT 'm2' NOT NULL,
-	int_espacios INTEGER NOT NULL DEFAULT 1,
-	
+	int_espcTotales INTEGER NOT NULL DEFAULT 1,
+	int_espcDisponi INTEGER NOT NULL,
+
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
 	date_modifica DATETIME NULL,

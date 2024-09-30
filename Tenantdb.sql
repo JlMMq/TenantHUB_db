@@ -86,8 +86,8 @@ CREATE TABLE Tb_Inquilino(
 	str_direccion VARCHAR(200) NULL,
 	int_tipo INTEGER NOT NULL DEFAULT 0,
 	
-	str_url_foto VARCHAR(2000) NULL,
-	str_url_docmt VARCHAR(2000) NULL,
+	img_foto IMAGE NULL,
+	img_docmt IMAGE NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
@@ -113,8 +113,8 @@ CREATE TABLE Tb_Propietario(
 	str_direccion VARCHAR(200) NULL,
 	str_direccionExt VARCHAR(200) NULL,
 	
-	str_url_foto VARCHAR(2000) NULL,
-	str_url_docmt VARCHAR(2000) NULL,
+	img_foto IMAGE NULL,
+	img_docmt IMAGE NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
@@ -169,7 +169,7 @@ GO
 CREATE TABLE Tb_Inmueble_Foto(
 	int_codInFoto INTEGER IDENTITY(1,1) PRIMARY KEY,
 	int_codInmub INTEGER NOT NULL FOREIGN KEY REFERENCES Tb_Inmueble(int_codInmub),
-	str_url VARCHAR(2000) NOT NULL,
+	img_foto IMAGE NOT NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL

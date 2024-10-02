@@ -87,7 +87,7 @@ CREATE TABLE Tb_Inquilino(
 	int_tipo INTEGER NOT NULL DEFAULT 0,
 	
 	img_foto IMAGE NULL,
-	img_docmt IMAGE NULL,
+	bin_document VARBINARY(MAX) NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
@@ -114,7 +114,7 @@ CREATE TABLE Tb_Propietario(
 	str_direccionExt VARCHAR(200) NULL,
 	
 	img_foto IMAGE NULL,
-	img_docmt IMAGE NULL,
+	bin_document VARBINARY(MAX) NULL,
 
 	date_registro DATETIME NULL,
 	int_registroUser INTEGER NULL,
